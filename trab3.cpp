@@ -134,7 +134,9 @@ void Read(std::string file){
         cout << "Error reading File: " << file << endl; //Printa um erro caso nao consiga dar load na file
     }
     FileReader.close();
+}
 
+void PrintProfessores(){
     for(int i = 0;i < professores.size();i++){
         cout << professores[i].habilitacao << endl;
         cout << "\t";
@@ -143,6 +145,9 @@ void Read(std::string file){
         }
         cout << endl;
     }
+}
+
+void PrintEscolas(){
     for(int i = 0;i < escolas.size();i++){
         cout << escolas[i].escola << endl;
         cout << "\t";
@@ -154,12 +159,10 @@ void Read(std::string file){
 }
 
 
-
-
-
 int main(void){
     Read("professores.txt");
-
+    PrintProfessores();
+    PrintEscolas();
     return 0;
 }
   
