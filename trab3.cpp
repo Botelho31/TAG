@@ -138,22 +138,25 @@ void Read(std::string file){
 
 void PrintProfessores(){
     for(int i = 0;i < professores.size();i++){
-        cout << professores[i].habilitacao << endl;
-        cout << "\t";
+        cout << "Professor Numero: " << i << endl;
+        cout << "\t Habilitacao: "<< professores[i].habilitacao << endl;
+        cout << "\t Escolas Pretendidas: ";
         for(int j = 0;j < professores[i].escolas.size();j++){
             cout << professores[i].escolas[j] << " ";
         }
+        cout << endl;
         cout << endl;
     }
 }
 
 void PrintEscolas(){
     for(int i = 0;i < escolas.size();i++){
-        cout << escolas[i].escola << endl;
-        cout << "\t";
+        cout << "Escola Numero: "<< escolas[i].escola << endl;
+        cout << "\tHabilitacoes Pretendidas: ";
         for(int j = 0;j < escolas[i].habilitacaopretendidas.size();j++){
             cout << escolas[i].habilitacaopretendidas[j] << " ";
         }
+        cout << endl;
         cout << endl;
     }
 }
