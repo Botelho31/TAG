@@ -203,6 +203,22 @@ void PrintEscolas(){
     cout << "Vagas Disponiveis: " << vagasemmatch << endl;
     cout << endl;
 }
+
+void PrintDisponibilidade(){
+    for(int i = 0;i < professores.size();i++){
+        if(!professores[i].matched){
+            cout << "Professor Numero: " << i << endl;
+            cout << "\t Habilitacao: "<< professores[i].habilitacao << endl;
+            cout << "\t Escolas Pretendidas: ";
+            for(int j = 0;j < professores[i].escolas.size();j++){
+                cout << professores[i].escolas[j] << " ";
+            }
+            cout << "\t Proposiçoes: " << professores[i].proposicoes << endl;
+            cout << endl; 
+        }
+    }
+}
+
 //verifica se as escolas podem ainda ser mexidas
 bool VerificaProfessor(){
     int flag = 0;
