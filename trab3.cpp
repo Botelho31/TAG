@@ -247,7 +247,6 @@ void Emparelhamento(){
             //escolhe um professore livre e que nao tenha pedido pra todas as escolas
             professores[i].proposicoes++;
             // cout << "Professor Atual: " << i << " Proposicoes: " << professores[i].proposicoes << endl;
-            bool matched = false;
             for (int j = 0; j < professores[i].escolas.size(); j++) {
                 int escolaAtual = professores[i].escolas[j];
                 // cout << "\tEscola Atual: " << escolaAtual << endl;
@@ -278,32 +277,31 @@ void Emparelhamento(){
                     }
                 }
                 if(professores[i].matched){
-                    matched = true;
                     break;
                 }
-            }
-            if(!matched){
-                for(int i = 0;i< escolas.size();i++){
-                    int escolaAtual = i;
-                    // cout << "\tEscola Atual: " << escolaAtual << endl;
-                    for (int x = 0; x < escolas[escolaAtual].habilitacaopretendidas.size(); x++) {
-                        //se a escola n for escolhida ainda e a escola tiver interesse na habilidade do profesor ele entra nesse if
-                        if((escolas[escolaAtual].habilitacaopretendidas[x] <= professores[i].habilitacao) && (professores[i].matched == false)){
-                            if (!(escolas[escolaAtual].matched[x])) {
-                                professores[i].emparelhado = escolaAtual;
-                                professores[i].matched = true;
-                                escolas[escolaAtual].matched[x] = true;
-                                escolas[escolaAtual].emparelhado[x] = i;
-                                cout << endl;
-                                cout << "\tMatched 1: " << i << " and " << escolaAtual << endl;
-                                break;
-                            }
+            }            
+
+        i = EscolheProfessor();
+    }
+    for(int i = 0;i < professores.size();i++){
+        for(int z = 0; z < escolas.size();z++){
+                int escolaAtual = z;
+                // cout << "\tEscola Atual: " << escolaAtual << endl;
+                for (int x = 0; x < escolas[escolaAtual].habilitacaopretendidas.size(); x++) {
+                    //se a escola n for escolhida ainda e a escola tiver interesse na habilidade do profesor ele entra nesse if
+                    if((escolas[escolaAtual].habilitacaopretendidas[x] <= professores[i].habilitacao) && (professores[i].matched == false)){
+                        if (!(escolas[escolaAtual].matched[x])) {
+                            professores[i].emparelhado = escolaAtual;
+                            professores[i].matched = true;
+                            escolas[escolaAtual].matched[x] = true;
+                            escolas[escolaAtual].emparelhado[x] = i;
+                            cout << endl;
+                            cout << "\tMatched 1: " << i << " and " << escolaAtual << endl;
+                            break;
                         }
                     }
                 }
             }
-
-        i = EscolheProfessor();
     }
 }
 
