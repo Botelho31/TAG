@@ -112,6 +112,8 @@ void Read(std::string file){
     string checkline;
     int num = 0;
     bool escolastarted = false;
+    Escola escola = Escola(0,{});
+    escolas.push_back(escola);
     if (FileReader.is_open()) {
         while (!FileReader.eof() && !escolastarted) {
             vector<int> Prof;
@@ -156,6 +158,7 @@ void Read(std::string file){
 }
 
 void PrintProfessores(){
+    int profsemmatch = 0;
     for(int i = 0;i < professores.size();i++){
         cout << "Professor Numero: " << i << endl;
         cout << "\t Habilitacao: "<< professores[i].habilitacao << endl;
@@ -163,15 +166,23 @@ void PrintProfessores(){
         for(int j = 0;j < professores[i].escolas.size();j++){
             cout << professores[i].escolas[j] << " ";
         }
-        cout << "\t Professor esta livre: " << professores[i].matched;
+        cout << "\t Proposiçoes: " << professores[i].proposicoes << endl;
+        if(professores[i].matched){
+             cout << "\t Professor esta Empregado em: " << professores[i].emparelhado <<  endl;;
+        }else{
+             profsemmatch ++;
+        }
         cout << endl;
         cout << endl;
     }
+    cout << "Professores sem Match: " << profsemmatch << endl;
+    cout << endl;
 }
 
 void PrintEscolas(){
-    for(int i = 0;i < escolas.size();i++){
-        cout << "Escola Numero: "<< escolas[i].escola << endl;
+    int vagasemmatch = 0;
+    for(int i = 1;i < escolas.size();i++){
+        cout << "Escola Numero: "<< i<< endl;
         cout << "\tHabilitacoes Pretendidas: ";
         for(int j = 0;j < escolas[i].habilitacaopretendidas.size();j++){
             cout << escolas[i].habilitacaopretendidas[j] << " ";
@@ -179,17 +190,24 @@ void PrintEscolas(){
         }
         cout << endl;
         for(int j = 0; j < escolas[i].emparelhado.size();j++){
-            cout << "\t\t" << "Vaga preenchida por: " << escolas[i].emparelhado[j] << endl;
+            if(escolas[i].emparelhado[j] == 999){
+                cout << "\t\t" << "Vaga Nao preenchida" << endl;
+                vagasemmatch ++;
+            }else{
+                cout << "\t\t" << "Vaga preenchida por: " << escolas[i].emparelhado[j] << endl;
+            }
         }
         cout << endl;
         cout << endl;
     }
+    cout << "Vagas Disponiveis: " << vagasemmatch << endl;
+    cout << endl;
 }
 //verifica se as escolas podem ainda ser mexidas
 bool VerificaProfessor(){
     int flag = 0;
     for (int i = 0; i < professores.size(); i++) {
-        if(!(professores[i].matched) && (professores[i].proposicoes != escolas.size())){
+        if(!(professores[i].matched) && (professores[i].proposicoes != 50)){
             flag++;
         }
     }
@@ -229,6 +247,7 @@ void Emparelhamento(){
             //escolhe um professore livre e que nao tenha pedido pra todas as escolas
             professores[i].proposicoes++;
             // cout << "Professor Atual: " << i << " Proposicoes: " << professores[i].proposicoes << endl;
+            bool matched = false;
             for (int j = 0; j < professores[i].escolas.size(); j++) {
                 int escolaAtual = professores[i].escolas[j];
                 // cout << "\tEscola Atual: " << escolaAtual << endl;
@@ -252,7 +271,6 @@ void Emparelhamento(){
                                 professores[i].emparelhado = escolaAtual;
                                 professores[i].matched = true;
                                 escolas[escolaAtual].emparelhado[x] = i;
-                                escolas[escolaAtual].matched[x] = true;
                                 cout << "\tMatched 2: " << i << " and " << escolaAtual << endl;
                                 break;
                             }
@@ -260,9 +278,31 @@ void Emparelhamento(){
                     }
                 }
                 if(professores[i].matched){
+                    matched = true;
                     break;
                 }
             }
+            if(!matched){
+                for(int i = 0;i< escolas.size();i++){
+                    int escolaAtual = i;
+                    // cout << "\tEscola Atual: " << escolaAtual << endl;
+                    for (int x = 0; x < escolas[escolaAtual].habilitacaopretendidas.size(); x++) {
+                        //se a escola n for escolhida ainda e a escola tiver interesse na habilidade do profesor ele entra nesse if
+                        if((escolas[escolaAtual].habilitacaopretendidas[x] <= professores[i].habilitacao) && (professores[i].matched == false)){
+                            if (!(escolas[escolaAtual].matched[x])) {
+                                professores[i].emparelhado = escolaAtual;
+                                professores[i].matched = true;
+                                escolas[escolaAtual].matched[x] = true;
+                                escolas[escolaAtual].emparelhado[x] = i;
+                                cout << endl;
+                                cout << "\tMatched 1: " << i << " and " << escolaAtual << endl;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
         i = EscolheProfessor();
     }
 }
@@ -271,7 +311,7 @@ void Emparelhamento(){
 int main(void){
     Read("professores.txt");
     Emparelhamento();
-    // PrintProfessores();
+    PrintProfessores();
     PrintEscolas();
     return 0;
 }
