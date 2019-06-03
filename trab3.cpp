@@ -225,44 +225,44 @@ int GetNiveldePreferencia(Professor prof, int preferencia){
 void Emparelhamento(){
     //verifica se tem professores livres ainda
     int i = EscolheProfessor();
-    while (VerificaProfessor() && i != 999) {
-        //escolhe um professore livre e que nao tenha pedido pra todas as escolas
-        professores[i].proposicoes++;
-        cout << "Professor Atual: " << i << endl;
-        for (int j = 0; j < professores[i].escolas.size(); j++) {
-            int escolaAtual = professores[i].escolas[j];
-            cout << "\tEscola Atual: " << escolaAtual << endl;
-            for (int x = 0; x < escolas[escolaAtual].habilitacaopretendidas.size(); x++) {
-                //se a escola n for escolhida ainda e a escola tiver interesse na habilidade do profesor ele entra nesse if
-                if(escolas[escolaAtual].habilitacaopretendidas[x] == professores[i].habilitacao){
-                    if (!(escolas[escolaAtual].matched[x])) {
-                        professores[i].emparelhado = escolaAtual;
-                        professores[i].matched = true;
-                        escolas[escolaAtual].matched[x] = true;
-                        escolas[escolaAtual].emparelhado[x] = i;
-                        cout << "\tMatched: " << i << " and " << escolaAtual << endl;
-                        x = escolas[escolaAtual].habilitacaopretendidas.size();
-                        j = professores[i].escolas.size();
-                        break;
-                    }
-                    //verifica se a escola ja foi escolhida e verifica se a preferencia do match anterior eh maior que a preferencia do professor atual, nesse caso entra nesse if
-                    //Botelho da uma verificada nesse if, pq tem chance de dar alguma merda com relacao a isso pq, talvez, nem sempre eh pra tu ignorar o fato se ja deu match (isso nao eh ctz, so estou confabulando)
-                    else if(escolas[escolaAtual].matched[x]){
-                        if((GetNiveldePreferencia(professores[i], escolaAtual) < GetNiveldePreferencia(professores[escolas[escolaAtual].emparelhado[x]], escolaAtual))){
+    while (VerificaProfessor()){
+            //escolhe um professore livre e que nao tenha pedido pra todas as escolas
+            professores[i].proposicoes++;
+            // cout << "Professor Atual: " << i << " Proposicoes: " << professores[i].proposicoes << endl;
+            for (int j = 0; j < professores[i].escolas.size(); j++) {
+                int escolaAtual = professores[i].escolas[j];
+                // cout << "\tEscola Atual: " << escolaAtual << endl;
+                for (int x = 0; x < escolas[escolaAtual].habilitacaopretendidas.size(); x++) {
+                    //se a escola n for escolhida ainda e a escola tiver interesse na habilidade do profesor ele entra nesse if
+                    if((escolas[escolaAtual].habilitacaopretendidas[x] <= professores[i].habilitacao) && (professores[i].matched == false)){
+                        if (!(escolas[escolaAtual].matched[x])) {
                             professores[i].emparelhado = escolaAtual;
                             professores[i].matched = true;
+                            escolas[escolaAtual].matched[x] = true;
                             escolas[escolaAtual].emparelhado[x] = i;
-                            professores[escolas[escolaAtual].emparelhado[x]].emparelhado = 999;
-                            professores[escolas[escolaAtual].emparelhado[x]].matched = false;
-                            cout << "\tMatched: " << i << " and " << escolaAtual << endl;
-                            x = escolas[escolaAtual].habilitacaopretendidas.size();
-                            j = professores[i].escolas.size();
+                            cout << endl;
+                            cout << "\tMatched 1: " << i << " and " << escolaAtual << endl;
                             break;
+                        }
+                        //verifica se a escola ja foi escolhida e verifica se a preferencia do match anterior eh maior que a preferencia do professor atual, nesse caso entra nesse if
+                        else{
+                            if(GetNiveldePreferencia(professores[i], escolaAtual) < GetNiveldePreferencia(professores[escolas[escolaAtual].emparelhado[x]], escolaAtual)){
+                                professores[escolas[escolaAtual].emparelhado[x]].emparelhado = 999;
+                                professores[escolas[escolaAtual].emparelhado[x]].matched = false;
+                                professores[i].emparelhado = escolaAtual;
+                                professores[i].matched = true;
+                                escolas[escolaAtual].emparelhado[x] = i;
+                                escolas[escolaAtual].matched[x] = true;
+                                cout << "\tMatched 2: " << i << " and " << escolaAtual << endl;
+                                break;
+                            }
                         }
                     }
                 }
+                if(professores[i].matched){
+                    break;
+                }
             }
-        }
         i = EscolheProfessor();
     }
 }
