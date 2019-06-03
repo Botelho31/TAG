@@ -205,6 +205,10 @@ void PrintEscolas(){
 }
 
 void PrintDisponibilidade(){
+    int um,dois,tres;
+    um = 0;
+    dois = 0;
+    tres = 0;
     for(int i = 0;i < professores.size();i++){
         if(!professores[i].matched){
             cout << "Professor Numero: " << i << endl;
@@ -216,7 +220,55 @@ void PrintDisponibilidade(){
             cout << "\t Proposiçoes: " << professores[i].proposicoes << endl;
             cout << endl; 
         }
+        switch(professores[i].habilitacao){
+            case 1:
+                um ++;
+                break;
+            case 2:
+                dois ++;
+                break;
+            case 3:
+                tres ++;
+                break;
+            default:
+                break;
+        }
     }
+    cout << um << endl;
+    cout << dois << endl;
+    cout << tres << endl;
+    cout << endl;
+
+    um = 0;
+    dois = 0;
+    tres = 0;
+    for(int i = 1;i < escolas.size();i++){
+        for(int j = 0; j < escolas[i].emparelhado.size();j++){
+            if(escolas[i].emparelhado[j] == 999){
+                cout << "Escola Numero: "<< i<< endl;
+                cout << "\t\t" << "Vaga Nao preenchida : " << escolas[i].habilitacaopretendidas[j] << endl;
+                cout << endl;
+            }
+        }
+        for(int j = 0;j < escolas[i].habilitacaopretendidas.size();j++){
+            switch(escolas[i].habilitacaopretendidas[j]){
+                case 1:
+                um ++;
+                    break;
+                case 2:
+                dois ++;
+                    break;
+                case 3:
+                tres ++;
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    cout << um << endl;
+    cout << dois << endl;
+    cout << tres << endl;
 }
 
 //verifica se as escolas podem ainda ser mexidas
@@ -283,7 +335,7 @@ void Emparelhamento(){
                 // cout << "\tEscola Atual: " << escolaAtual << endl;
                 for (int x = 0; x < escolas[escolaAtual].habilitacaopretendidas.size(); x++) {
                     //se a escola n for escolhida ainda e a escola tiver interesse na habilidade do profesor ele entra nesse if
-                    if((escolas[escolaAtual].habilitacaopretendidas[x] <= professores[i].habilitacao) && (professores[i].matched == false)){
+                    if((escolas[escolaAtual].habilitacaopretendidas[x] == professores[i].habilitacao) && (professores[i].matched == false)){
                         if (!(escolas[escolaAtual].matched[x])) {
                             professores[i].emparelhado = escolaAtual;
                             professores[i].matched = true;
@@ -328,6 +380,7 @@ void Emparelhamento(){
 int main(void){
     Read("professores.txt");
     Emparelhamento();
+    // PrintDisponibilidade();
     PrintProfessores();
     PrintEscolas();
     return 0;
