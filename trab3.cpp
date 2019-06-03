@@ -238,6 +238,21 @@ int GetNiveldePreferencia(Professor prof, int preferencia){
     }
     return 999;
 }
+//Funcao para pegar uma escola que esteja com vaga q necessite de determinada habilidade
+vector<int> GetEscola(int habilitacao){
+    vector<int> x;
+    for (int i = 0; i < escolas.size(); i++) {
+        for (int j = 0; j < escolas[i].matched.size(); j++) {
+            if (!escolas[i].matched[j] && escolas[i].habilitacaopretendidas[j] == habilitacao) {
+                x.push_back(i);
+                x.push_back(j);
+                return x;
+            }
+        }
+    }
+    x.push_back(999);
+    return x;
+}
 
 //faz os Emparelhamento
 void Emparelhamento(){
@@ -279,29 +294,17 @@ void Emparelhamento(){
                 if(professores[i].matched){
                     break;
                 }
-            }            
-
-        i = EscolheProfessor();
-    }
-    for(int i = 0;i < professores.size();i++){
-        for(int z = 0; z < escolas.size();z++){
-                int escolaAtual = z;
-                // cout << "\tEscola Atual: " << escolaAtual << endl;
-                for (int x = 0; x < escolas[escolaAtual].habilitacaopretendidas.size(); x++) {
-                    //se a escola n for escolhida ainda e a escola tiver interesse na habilidade do profesor ele entra nesse if
-                    if((escolas[escolaAtual].habilitacaopretendidas[x] <= professores[i].habilitacao) && (professores[i].matched == false)){
-                        if (!(escolas[escolaAtual].matched[x])) {
-                            professores[i].emparelhado = escolaAtual;
-                            professores[i].matched = true;
-                            escolas[escolaAtual].matched[x] = true;
-                            escolas[escolaAtual].emparelhado[x] = i;
-                            cout << endl;
-                            cout << "\tMatched 1: " << i << " and " << escolaAtual << endl;
-                            break;
-                        }
-                    }
-                }
             }
+            vector<int> x;
+            x = GetEscola(professores[i].habilitacao);
+            if (x[0] != 999 && !professores[i].matched) {
+                professores[i].emparelhado = x[0];
+                professores[i].matched = true;
+                escolas[x[0]].emparelhado[x[1]] = i;
+                escolas[x[0]].matched[x[1]] = true;
+                cout << "\tMatched 3: " << i << " and " << x[0] << endl;
+            }
+        i = EscolheProfessor();
     }
 }
 
