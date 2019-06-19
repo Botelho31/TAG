@@ -5,13 +5,13 @@ class vec2{
     int x,y;
 };
 
-class vector{
+class vetor{
     int number;
     bool haspassed;
     std::vector<int> vizinhos;
 };
 
-std::vector<vector> vectors;
+std::vector<std::vector<vetor>> vectors;
 
 int matriz[9][9];
 
