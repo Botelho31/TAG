@@ -1,6 +1,18 @@
 #include <bits/stdc++.h>
 #include <cstdlib>
 
+class vec2{
+    int x,y;
+};
+
+class vector{
+    int number;
+    bool haspassed;
+    std::vector<int> vizinhos;
+};
+
+std::vector<vector> vectors;
+
 int matriz[9][9];
 
 void CarregarMatriz(std::string file){
