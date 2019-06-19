@@ -5,13 +5,21 @@ class vec2{
     int x,y;
 };
 
-class vetor{
-    int number;
-    bool haspassed;
-    std::vector<int> vizinhos;
+class victor{
+    public:
+        victor(int x){
+            haspassed = false;
+            number = x;
+        }
+        int number;
+        bool haspassed;
+        std::vector<int> vizinhos;
+        void InsertCon(int x){
+            vizinhos.push_back(x);
+        }
 };
 
-std::vector<std::vector<vetor>> vectors;
+std::vector<victor*> vectors;
 
 int matriz[9][9];
 
@@ -47,59 +55,62 @@ void CarregarMatriz(std::string file){
 
 
 void CarregarGrafo(){
-    
+    for (int i = 0; i < 9; i++) {
+        for (int j = 0; j < 9; j++) {
+            victor *numero = new victor(matriz[i][j]);
+            for (int x = 0; x < 9; x++) {
+                if (i != x) {
+                    numero->InsertCon(matriz[x][j]);
+                }
+            }
+            for (int x = 0; x < 9; x++) {
+                if (j != x) {
+                    numero->InsertCon(matriz[i][x]);
+                }
+            }
+            vectors.push_back(numero);
+        }
+    }
 }
 
-void AlgoritmoGuloso(int x,int y){
-    // if(matriz[x][y] > 0){
-    //     return;
-    // }else{
-    //     std::vector<int> vizinhos;
-    //     if(x > 0){
-    //         vizinhos.push_back(matriz[x - 1][y]);
-    //     }
-    //     if(x < 8){
-    //         vizinhos.push_back(matriz[x + 1][y]);
-    //     }
-    //     if(y > 0){
-    //         vizinhos.push_back(matriz[x][y - 1]);
-    //     }
-    //     if(y < 9){
-    //         vizinhos.push_back(matriz[x + 1][y + 1]);
-    //     }
-    //     for(int i = 1;i <= 9;i++){
-    //         bool vizinhoHasNumber = false;
-    //         for(int j = 0;j < vizinhos.size();i++){
-    //             if(vizinhos[j] == i){
-    //                 vizinhoHasNumber = true;
-    //                 break;
-    //             }
-    //         }
-    //         if(!vizinhoHasNumber){
-    //             matriz[x][y] = i;
-    //             break;
-    //         }
-    //     }
-    //     if(x > 0){
-    //         AlgoritmoGuloso(x - 1,y);
-    //     }
-    //     if(x < 8){
-    //         AlgoritmoGuloso(x + 1,y);
-    //     }
-    //     if(y > 0){
-    //         AlgoritmoGuloso(x,y - 1);
-    //     }
-    //     if(y < 9){
-    //         AlgoritmoGuloso(x ,y + 1);
-    //     }
-    // }
+void AlgoritmoGuloso(victor *vector){
+    if(vector->number > 0){
+        return;
+    }else{
+        for(int i = 1;i <= 9;i++){
+            bool vizinhoHasNumber = false;
+            for(int j = 0;j < vector->vizinhos.size();j++){
+                if(vector->vizinhos[j] == i){
+                    vizinhoHasNumber = true;
+                    break;
+                }
+            }
+            if(!vizinhoHasNumber){
+                vector->number = i;
+                return;
+            }
+        }
+    }
 }
 
 
 int main(int argc, char const **argv) {
 
     CarregarMatriz("Sudoku.txt");
-    // AlgoritmoGuloso(1,0);
+    CarregarGrafo();
+
+    for(int i = 0;i < vectors.size();i++){
+        AlgoritmoGuloso(vectors[i]);
+    }
+    for (int i = 0; i < vectors.size(); i++) {
+        std::cout << vectors[i]->number << "  ";
+        if(((i + 1) % 9) == 0){
+            std::cout << '\n';
+        }
+    }
+
+    std::cout << '\n';
+    std::cout << '\n';
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             std::cout << matriz[i][j] << "  ";
