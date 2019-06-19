@@ -10,7 +10,7 @@ class Professor{
             this->escolas = escolas;
             this->matched = false;
             this->emparelhado = 999;
-            this->proposicoes = 0;
+            this->proposicoes = 0; //
         }
         int habilitacao;
         vector<int> escolas;
