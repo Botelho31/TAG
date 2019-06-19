@@ -38,10 +38,56 @@ void CarregarGrafo(){
     
 }
 
+void AlgoritmoGuloso(int x,int y){
+    // if(matriz[x][y] > 0){
+    //     return;
+    // }else{
+    //     std::vector<int> vizinhos;
+    //     if(x > 0){
+    //         vizinhos.push_back(matriz[x - 1][y]);
+    //     }
+    //     if(x < 8){
+    //         vizinhos.push_back(matriz[x + 1][y]);
+    //     }
+    //     if(y > 0){
+    //         vizinhos.push_back(matriz[x][y - 1]);
+    //     }
+    //     if(y < 9){
+    //         vizinhos.push_back(matriz[x + 1][y + 1]);
+    //     }
+    //     for(int i = 1;i <= 9;i++){
+    //         bool vizinhoHasNumber = false;
+    //         for(int j = 0;j < vizinhos.size();i++){
+    //             if(vizinhos[j] == i){
+    //                 vizinhoHasNumber = true;
+    //                 break;
+    //             }
+    //         }
+    //         if(!vizinhoHasNumber){
+    //             matriz[x][y] = i;
+    //             break;
+    //         }
+    //     }
+    //     if(x > 0){
+    //         AlgoritmoGuloso(x - 1,y);
+    //     }
+    //     if(x < 8){
+    //         AlgoritmoGuloso(x + 1,y);
+    //     }
+    //     if(y > 0){
+    //         AlgoritmoGuloso(x,y - 1);
+    //     }
+    //     if(y < 9){
+    //         AlgoritmoGuloso(x ,y + 1);
+    //     }
+    // }
+}
+
 
 int main(int argc, char const **argv) {
 
     CarregarMatriz("Sudoku.txt");
+    // AlgoritmoGuloso(1,0);
     for (int i = 0; i < 9; i++) {
         for (int j = 0; j < 9; j++) {
             std::cout << matriz[i][j] << "  ";
