@@ -9,21 +9,21 @@ class vec2
 
 class victor
 {
-public:
-    victor(int x)
-    {
-        haspassed = false;
-        number = x;
-        saturation = 0;
-    }
-    int saturation;
-    int number;
-    bool haspassed;
-    std::vector<victor *> vizinhos;
-    void InsertCon(victor *vector)
-    {
-        vizinhos.push_back(vector);
-    }
+    public:
+        victor(int x)
+        {
+            haspassed = false;
+            number = x;
+            saturation = 0;
+        }
+        int saturation;
+        int number;
+        bool haspassed;
+        std::vector<victor *> vizinhos;
+        void InsertCon(victor *vector)
+        {
+            vizinhos.push_back(vector);
+        }
 };
 
 std::vector<std::vector<victor *>> vectors;
@@ -312,13 +312,87 @@ void getRandomSudoku(){
     repeatDsatur();
 }
 
+std::vector<int> vx;
+std::vector<int> vy;
+
+bool Checkv(int x,int y, std::vector<int> v, std::vector<int> v1){
+    for (int i = 0; i < v.size(); i++) {
+        if (x == v[i] && y == v1[i]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+void Fillwithzeros(){
+    int x;
+    int y;
+    for (int i = 0; i < 9; i++) {
+        if (i < 3) {
+            int flag = rand()%3 + 5;
+            for (int z = 0; z < flag; z++) {
+                x = (rand()%3) + (i * 3);
+                y = (rand()%3);
+                while (Checkv(x, y, vx, vy)) {
+                    x = (rand()%3) + (i * 3);
+                    y = (rand()%3);
+                }
+                vx.push_back(x);
+                vy.push_back(y);
+                vectors[x][y]->number = 0;
+            }
+            vx.clear();
+            vy.clear();
+        }
+        else{
+            if (i < 6) {
+                int flag = rand()%3 + 5;
+                for (int z = 0; z < flag; z++) {
+                    x = (rand()%3) + ((i%3) * 3);
+                    y = (rand()%3) + 3;
+                    while (Checkv(x, y, vx, vy)) {
+                        x = (rand()%3) + ((i%3) * 3);
+                        y = (rand()%3) + 3;
+                    }
+                    vx.push_back(x);
+                    vy.push_back(y);
+                    vectors[x][y]->number = 0;
+                }
+                vx.clear();
+                vy.clear();
+            }
+            else{
+                if (i < 9) {
+                    int flag = rand()%3 + 5;
+                    for (int z = 0; z < flag; z++) {
+                        x = (rand()%3) + ((i%3) * 3);
+                        y = (rand()%3) + 6;
+                        while (Checkv(x, y, vx, vy)) {
+                            x = (rand()%3) + ((i%3) * 3);
+                            y = (rand()%3) + 6;
+                        }
+                        vx.push_back(x);
+                        vy.push_back(y);
+                        vectors[x][y]->number = 0;
+                    }
+                    vx.clear();
+                    vy.clear();
+                }
+            }
+        }
+    }
+}
+
+
 int main(int argc, char const **argv)
 {
     srand(time(NULL));
-    CarregarMatriz("Sudoku.txt");
+    // CarregarMatriz("Sudoku.txt");
 
-    repeatDsatur();
+    // repeatDsatur();
     getRandomSudoku();
+    Fillwithzeros();
     printMatriz();
 
     return 0;
