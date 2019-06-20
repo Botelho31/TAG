@@ -30,6 +30,14 @@ std::vector<std::vector<victor *>> vectors;
 
 int matriz[9][9];
 
+void ClearMatriz(){
+    for(int i = 0;i < 9;i++){
+        for(int j = 0;j < 9;j++){
+            matriz[i][j] = 0;
+        }
+    }
+}
+
 void CarregarMatriz(std::string file)
 {
     std::ifstream FileReader;
@@ -234,11 +242,25 @@ void printSaturacaoMatriz()
     }
 }
 
+bool IsGrafoPainted(){
+    bool painted = true;
+    for (int i = 0; i < vectors.size(); i++)
+    {
+        for (int j = 0; j < vectors[i].size(); j++)
+        {
+            if(vectors[i][j]->number == 0){
+                painted = false;
+            }
+        }
+    }
+    return painted;
+}
+
 bool Dsatur()
 {
     int saturation = 9;
     bool failed = false;
-    while (saturation > 0)
+    while (!IsGrafoPainted())
     {   
         bool saturation9 = false;
         saturation9 = !RecarregarSaturacao();
@@ -277,7 +299,6 @@ void repeatDsatur(){
     bool success = false;
     while(!success){
         vectors.clear();
-        CarregarMatriz("Sudoku.txt");
         CarregarGrafo();
         int Seed = rand();
         srand(Seed);
@@ -286,10 +307,18 @@ void repeatDsatur(){
     }
 }
 
+void getRandomSudoku(){
+    ClearMatriz();
+    repeatDsatur();
+}
+
 int main(int argc, char const **argv)
 {
     srand(time(NULL));
+    CarregarMatriz("Sudoku.txt");
+
     repeatDsatur();
+    getRandomSudoku();
     printMatriz();
 
     return 0;
