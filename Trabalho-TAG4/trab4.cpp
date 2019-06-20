@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include <cstdlib>
+#include <time.h> 
 
 class vec2
 {
@@ -55,7 +56,7 @@ void CarregarMatriz(std::string file)
             {
                 posicaoy = 0;
             }
-            matriz[posicaox][posicaoy] = numero;
+            matriz[posicaoy][posicaox] = numero;
             posicaox++;
         }
     }
@@ -99,7 +100,7 @@ void CarregarGrafo()
     }
 }
 
-void RecarregarSaturacao()
+bool RecarregarSaturacao()
 {
     for (int i = 0; i < 9; i++)
     {
@@ -134,6 +135,7 @@ void RecarregarSaturacao()
                             {
                                 vectors[i][j]->saturation = 0;
                                 vectors[i][j]->number = -1;
+                                return false;
                             }
                         }
                     }
@@ -141,6 +143,8 @@ void RecarregarSaturacao()
             }
         }
     }
+
+    return true;
 }
 
 victor *PegarMaiorSaturacao()
@@ -156,17 +160,19 @@ victor *PegarMaiorSaturacao()
                 {
                     pickedvector = vectors[i][j];
                 }
+                else if((pickedvector->saturation == vectors[i][j]->saturation) && ((rand() % 2) == 0 )){
+                    pickedvector = vectors[i][j];
+                }
             }
         }
     }
     return pickedvector;
 }
 
-void AlgoritmoGuloso(victor *vector)
+int AlgoritmoGuloso(victor *vector,bool backtracking = false)
 {
-    if (vector->number > 0)
-    {
-        return;
+    if (vector->number > 0){
+        return -1;
     }
     else
     {
@@ -180,12 +186,12 @@ void AlgoritmoGuloso(victor *vector)
                     vizinhoHasNumber = true;
                 }
             }
-            if (!vizinhoHasNumber)
-            {
+            if (!vizinhoHasNumber){
                 vector->number = i;
-                return;
+                return i;
             }
         }
+        
     }
 }
 
@@ -198,9 +204,19 @@ void printMatriz()
     {
         for (int j = 0; j < vectors[i].size(); j++)
         {
-            std::cout << vectors[i][j]->number << "  ";
+            if((((j + 1) % 3) == 0) && ((j + 1) != vectors[i].size())){
+                std::cout << vectors[i][j]->number << " | ";
+            }else{
+                std::cout << vectors[i][j]->number << "  ";
+            }
         }
         std::cout << '\n';
+        if((((i + 1) % 3) == 0) && ((i + 1) != vectors.size())){
+            for (int j = 0; j < 27; j++){
+                std::cout << "-";
+            }
+            std::cout << '\n';
+        }
     }
 }
 
@@ -218,25 +234,64 @@ void printSaturacaoMatriz()
     }
 }
 
-void Dsatur()
+bool Dsatur()
 {
     int saturation = 9;
+    bool failed = false;
     while (saturation > 0)
-    {
-        RecarregarSaturacao();
+    {   
+        bool saturation9 = false;
+        saturation9 = !RecarregarSaturacao();
         victor *maiorsaturacao = PegarMaiorSaturacao();
         AlgoritmoGuloso(maiorsaturacao);
         saturation = maiorsaturacao->saturation;
+        // printMatriz();
+
+        if(saturation9){
+            failed = true;
+        }
+    }
+
+    for (int i = 0; i < vectors.size(); i++)
+    {
+        for (int j = 0; j < vectors[i].size(); j++)
+        {
+            if(vectors[i][j]->number == -1){
+                vectors[i][j]->number = 0;
+            }
+        }
+    }
+
+    printMatriz();
+
+    if(failed){
+        std::cout << std::endl;
+        std::cout << "DSatur has failed" << std::endl;
+        return false;
+    }
+    else{
+        return true;
     }
 }
 
 int main(int argc, char const **argv)
 {
+    srand(time(NULL));
+    int Seed = rand();
+    srand(Seed);
 
     CarregarMatriz("Sudoku.txt");
     CarregarGrafo();
-    Dsatur();
-    printMatriz();
+    
+    bool success = false;
+    while(!success){
+        success = Dsatur();
+        vectors.clear();
+        CarregarMatriz("Sudoku.txt");
+        CarregarGrafo();
+        int Seed = rand();
+        srand(Seed);
+    }
 
     return 0;
 }
