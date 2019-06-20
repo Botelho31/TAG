@@ -245,7 +245,6 @@ bool Dsatur()
         victor *maiorsaturacao = PegarMaiorSaturacao();
         AlgoritmoGuloso(maiorsaturacao);
         saturation = maiorsaturacao->saturation;
-        // printMatriz();
 
         if(saturation9){
             failed = true;
@@ -262,36 +261,36 @@ bool Dsatur()
         }
     }
 
-    printMatriz();
-
     if(failed){
         std::cout << std::endl;
         std::cout << "DSatur has failed" << std::endl;
         return false;
     }
     else{
+        std::cout << std::endl;
+        std::cout << "DSatur has been Successfull" << std::endl;
         return true;
+    }
+}
+
+void repeatDsatur(){
+    bool success = false;
+    while(!success){
+        vectors.clear();
+        CarregarMatriz("Sudoku.txt");
+        CarregarGrafo();
+        int Seed = rand();
+        srand(Seed);
+
+        success = Dsatur();
     }
 }
 
 int main(int argc, char const **argv)
 {
     srand(time(NULL));
-    int Seed = rand();
-    srand(Seed);
-
-    CarregarMatriz("Sudoku.txt");
-    CarregarGrafo();
-    
-    bool success = false;
-    while(!success){
-        success = Dsatur();
-        vectors.clear();
-        CarregarMatriz("Sudoku.txt");
-        CarregarGrafo();
-        int Seed = rand();
-        srand(Seed);
-    }
+    repeatDsatur();
+    printMatriz();
 
     return 0;
 }
