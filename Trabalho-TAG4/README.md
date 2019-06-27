@@ -17,7 +17,7 @@ então ele tenta varias versões de randomização da solução desses conflitos
 tentativas.
 
 Foram implementadas a criação de um sudoku aleatorio resolvivel e o input do arquivo Sudoku.txt no formato onde os numeros sao
-inseridos da ordem esquerda a direita descendo as linhas da matriz com os numeros separados por virgula por exemplo:
+inseridos da ordem esquerda a direita descendo as linhas da matriz com os numeros separados por virgula como essse exemplo:
 
 8,0,0,1,5,0,6,0,0,
 0,0,0,3,0,0,0,4,1,
@@ -28,6 +28,8 @@ inseridos da ordem esquerda a direita descendo as linhas da matriz com os numero
 0,0,8,0,0,0,0,0,9,
 2,9,0,0,0,1,0,0,0,
 0,0,5,0,9,7,0,0,6
+
+Caso não seja possivel olhar o passo a passo da solução foi criado um arquivo 'log.txt' com o log inteiro da execução do programa;
 
     
 
