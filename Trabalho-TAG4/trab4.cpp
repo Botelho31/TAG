@@ -23,8 +23,27 @@ class victor
 };
 
 std::vector<std::vector<victor *>> vectors;
+std::stringstream logcontent;
 
 int matriz[9][9];
+
+//Insere o log do programa no arquivo log.txt
+void Log(std::string log,bool finishline = true){
+    if(finishline){
+        logcontent << log << "\n";
+        std::cout << log << std::endl;
+    }else{
+        logcontent << log;
+        std::cout << log;
+    }
+}
+
+void SaveLog(){
+    std::ofstream logfile;
+    logfile.open("log.txt");
+    logfile << logcontent.str();
+    logfile.close();
+}
 
 //Limpa a matriz
 void ClearMatriz(){
@@ -208,27 +227,44 @@ int AlgoritmoGuloso(victor *vector)
 //Printa a matriz no formato de Sudoku
 void printMatriz()
 {
-    std::cout << '\n';
-    std::cout << '\n';
+    std::stringstream matriz;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    matriz << "\n";
+    matriz << "\n";
 
     for (int i = 0; i < vectors.size(); i++)
     {
         for (int j = 0; j < vectors[i].size(); j++)
         {
             if((((j + 1) % 3) == 0) && ((j + 1) != vectors[i].size())){
-                std::cout << vectors[i][j]->number << " | ";
+                std::stringstream line;
+                line << vectors[i][j]->number << " | ";
+                line.str().pop_back();
+                matriz << line.str();
+                std::cout << line.str();
             }else{
-                std::cout << vectors[i][j]->number << "  ";
+                std::stringstream line;
+                line << vectors[i][j]->number << " ";
+                line.str().pop_back();
+                matriz << line.str();
+                std::cout << line.str();
             }
         }
-        std::cout << '\n';
+        matriz << "\n";
+        std::cout << std::endl;
         if((((i + 1) % 3) == 0) && ((i + 1) != vectors.size())){
-            for (int j = 0; j < 27; j++){
+            for (int j = 0; j < 24; j++){
+                matriz << "-";
                 std::cout << "-";
             }
-            std::cout << '\n';
+            matriz << "\n";
+            std::cout << std::endl;
         }
     }
+    matriz << "\n";
+    std::cout << std::endl;
+    logcontent << matriz.str();
 }
 
 //Printa a saturação da matriz por ponto
@@ -262,7 +298,7 @@ bool IsGrafoPainted(){
 }
 
 //Usa o algoritmo Guloso baseado na ordem de maior saturação
-bool Dsatur()
+bool Dsatur(bool print = false)
 {
     int saturation = 9;
     bool failed = false;
@@ -273,6 +309,9 @@ bool Dsatur()
         victor *maiorsaturacao = PegarMaiorSaturacao();
         AlgoritmoGuloso(maiorsaturacao);
         saturation = maiorsaturacao->saturation;
+        if(print){
+            printMatriz();
+        }
 
         if(saturation9){
             failed = true;
@@ -290,19 +329,21 @@ bool Dsatur()
     }
 
     if(failed){
-        // std::cout << std::endl;
-        // std::cout << "DSatur has failed" << std::endl;
+        if(print){
+            Log("\n --DSatur has failed--");
+        }
         return false;
     }
     else{
-        // std::cout << std::endl;
-        // std::cout << "DSatur has been Successfull" << std::endl;
+        if(print){
+            Log("\n --DSatur has been successfull--");
+        }
         return true;
     }
 }
 
 //Repete o algortimo de Dsatur com randomização diferente a cada tentativa na soluçaõ de conflito
-void repeatDsatur(){
+void repeatDsatur(bool print = false){
     bool success = false;
     int count = 0;
     while(!success && (count < 50)){
@@ -310,12 +351,16 @@ void repeatDsatur(){
         CarregarGrafo();
         int Seed = rand();
         srand(Seed);
-
-        success = Dsatur();
+        if(print){
+            std::stringstream print;
+            print <<  "\nTentativa Numero - " << count;
+            Log(print.str());
+        }
+        success = Dsatur(print); 
         count++;
     }
     if(count >= 50){
-        std::cout << "Matriz não é Resolvivel com 50 tentativas" << std::endl;
+        Log("Matriz não é Resolvivel com 50 tentativas");
     }
 }
 
@@ -396,64 +441,65 @@ void Fillwithzeros(){
         }
     }
 }
-
-
 int main(int argc, char const **argv)
 {
     srand(time(NULL));
     bool matrizinicial = false;
     bool quit = false;
     while(!matrizinicial && !quit){
-        std::cout << "Escolha que tipo de Sudoku inicial deseja ter:" << std::endl;
-        std::cout << "1- Jogo do input no arquivo Sudoku.txt" << std::endl;
-        std::cout << "2- Jogo criado aleatoriamente" << std::endl;
-        std::cout << "3- Sair" << std::endl;
-        std::cout << std::endl;
-
+        Log("Escolha que tipo de Sudoku inicial deseja ter:");
+        Log("1- Jogo do input no arquivo Sudoku.txt");
+        Log("2- Jogo criado aleatoriamente");
+        Log("3- Sair\n");
         std::string input;
         std::cin >> input;
+        Log(input);
         if(input == "1"){
-            std::cout << "Matriz Inicial - " << std::endl;
+            Log("Matriz Inicial: ");
             CarregarMatriz("Sudoku.txt");
             CarregarGrafo();
             printMatriz();
             matrizinicial = true;
         }else if(input == "2"){
-            std::cout << "Matriz Inicial - " << std::endl;
+             Log("Matriz Inicial: ");
             getRandomSudoku();
             Fillwithzeros();
             printMatriz();
             matrizinicial = true;
         }else if(input == "3"){
             quit = true;
-            std::cout << "Saindo" << std::endl << std::endl; 
+             Log("Saindo\n");
         }else{
-            std::cout << "Nenhuma Matriz Escolhida" << std::endl << std::endl; 
+            Log("Nenhuma Matriz Escolhida\n");
         }
 
     }
     if(matrizinicial){
+
+        Log("Essa é a matriz inicial digite qualquer coisa e aperte enter para resolve-la:");
+        std::string input3;
+        std::cin >> input3;
         int count = 1;
         bool finish = false;
-        std::cout << "Matriz Final - " << count << std::endl;
-        repeatDsatur();
-        printMatriz();
+        std::cout << std::endl;
+        repeatDsatur(true);
         while(!finish){
             std::cout << std::endl;
-            std::cout << "Digite 1 para ter outro resultado ou 2 para sair" << std::endl;
+            Log("Digite 1 para ter outro resultado ou 2 para sair");
             std::string input2;
             std::cin >> input2;
+            Log(input2);
             if(input2 == "1"){
                 count ++;
-                std::cout << "Matriz Final - " << count << std::endl;
-                repeatDsatur();
-                printMatriz();
+                Log("Matriz Final - " + count);
+                repeatDsatur(true);
             }else if(input2 == "2"){
-                std::cout << "Saindo" << std::endl;
+                Log("Saindo");
                 finish = true;
             }
         }
     }
 
+    SaveLog();
     return 0;
 }
