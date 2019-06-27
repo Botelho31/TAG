@@ -103,6 +103,7 @@ void GerarGrafoPng(vector<Materia*> materias){
     }
     myfile << "}\n";
     myfile.close();
+    system("dot -Tpng spider.dot -o spider.png");
 }
 
 void GerarGrafoCriticoPng(vector<Materia*> materias,map<int,int> caminhoCritico,vector<int> sourcesCaminhoCritico){

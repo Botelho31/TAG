@@ -284,26 +284,31 @@ bool Dsatur()
     }
 
     if(failed){
-        std::cout << std::endl;
-        std::cout << "DSatur has failed" << std::endl;
+        // std::cout << std::endl;
+        // std::cout << "DSatur has failed" << std::endl;
         return false;
     }
     else{
-        std::cout << std::endl;
-        std::cout << "DSatur has been Successfull" << std::endl;
+        // std::cout << std::endl;
+        // std::cout << "DSatur has been Successfull" << std::endl;
         return true;
     }
 }
 
 void repeatDsatur(){
     bool success = false;
-    while(!success){
+    int count = 0;
+    while(!success && (count < 50)){
         vectors.clear();
         CarregarGrafo();
         int Seed = rand();
         srand(Seed);
 
         success = Dsatur();
+        count++;
+    }
+    if(count >= 50){
+        std::cout << "Matriz não é Resolvivel" << std::endl;
     }
 }
 
@@ -388,12 +393,59 @@ void Fillwithzeros(){
 int main(int argc, char const **argv)
 {
     srand(time(NULL));
-    // CarregarMatriz("Sudoku.txt");
+    bool matrizinicial = false;
+    bool quit = false;
+    while(!matrizinicial && !quit){
+        std::cout << "Escolha que tipo de Sudoku inicial deseja ter:" << std::endl;
+        std::cout << "1- Jogo do input no arquivo Sudoku.txt" << std::endl;
+        std::cout << "2- Jogo criado aleatoriamente" << std::endl;
+        std::cout << "3- Sair" << std::endl;
+        std::cout << std::endl;
 
-    // repeatDsatur();
-    getRandomSudoku();
-    Fillwithzeros();
-    printMatriz();
+        std::string input;
+        std::cin >> input;
+        if(input == "1"){
+            std::cout << "Matriz Inicial - " << std::endl;
+            CarregarMatriz("Sudoku.txt");
+            CarregarGrafo();
+            printMatriz();
+            matrizinicial = true;
+        }else if(input == "2"){
+            std::cout << "Matriz Inicial - " << std::endl;
+            getRandomSudoku();
+            Fillwithzeros();
+            printMatriz();
+            matrizinicial = true;
+        }else if(input == "3"){
+            quit = true;
+            std::cout << "Saindo" << std::endl << std::endl; 
+        }else{
+            std::cout << "Nenhuma Matriz Escolhida" << std::endl << std::endl; 
+        }
+
+    }
+    if(matrizinicial){
+        int count = 1;
+        bool finish = false;
+        std::cout << "Matriz Final - " << count << std::endl;
+        repeatDsatur();
+        printMatriz();
+        while(!finish){
+            std::cout << std::endl;
+            std::cout << "Digite 1 para ter outro resultado ou 2 para sair" << std::endl;
+            std::string input2;
+            std::cin >> input2;
+            if(input2 == "1"){
+                count ++;
+                std::cout << "Matriz Final - " << count << std::endl;
+                repeatDsatur();
+                printMatriz();
+            }else if(input2 == "2"){
+                std::cout << "Saindo" << std::endl;
+                finish = true;
+            }
+        }
+    }
 
     return 0;
 }
