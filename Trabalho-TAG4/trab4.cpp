@@ -2,11 +2,7 @@
 #include <cstdlib>
 #include <time.h> 
 
-class vec2
-{
-    int x, y;
-};
-
+//Vertice do grafo
 class victor
 {
     public:
@@ -30,6 +26,7 @@ std::vector<std::vector<victor *>> vectors;
 
 int matriz[9][9];
 
+//Limpa a matriz
 void ClearMatriz(){
     for(int i = 0;i < 9;i++){
         for(int j = 0;j < 9;j++){
@@ -38,6 +35,7 @@ void ClearMatriz(){
     }
 }
 
+//Carrega a matriz de um txt no formato especificado no Readme
 void CarregarMatriz(std::string file)
 {
     std::ifstream FileReader;
@@ -74,6 +72,7 @@ void CarregarMatriz(std::string file)
     }
 }
 
+//Preenche o grafo e suas conexoes com todos da mesma fileira e coluna
 void CarregarGrafo()
 {
     for (int i = 0; i < 9; i++)
@@ -108,6 +107,7 @@ void CarregarGrafo()
     }
 }
 
+//Recarrega os indices de saturação do grafo
 bool RecarregarSaturacao()
 {
     for (int i = 0; i < 9; i++)
@@ -155,6 +155,7 @@ bool RecarregarSaturacao()
     return true;
 }
 
+//Pega o vertice de maior saturação, resolvendo conflitos onde a saturação é igual de forma aleatoria
 victor *PegarMaiorSaturacao()
 {
     victor *pickedvector = vectors[0][0];
@@ -177,7 +178,8 @@ victor *PegarMaiorSaturacao()
     return pickedvector;
 }
 
-int AlgoritmoGuloso(victor *vector,bool backtracking = false)
+//Algoritmo Guloso
+int AlgoritmoGuloso(victor *vector)
 {
     if (vector->number > 0){
         return -1;
@@ -203,6 +205,7 @@ int AlgoritmoGuloso(victor *vector,bool backtracking = false)
     }
 }
 
+//Printa a matriz no formato de Sudoku
 void printMatriz()
 {
     std::cout << '\n';
@@ -228,6 +231,7 @@ void printMatriz()
     }
 }
 
+//Printa a saturação da matriz por ponto
 void printSaturacaoMatriz()
 {
 
@@ -242,6 +246,7 @@ void printSaturacaoMatriz()
     }
 }
 
+//Ve se o grafo ja esta completamente preenchido
 bool IsGrafoPainted(){
     bool painted = true;
     for (int i = 0; i < vectors.size(); i++)
@@ -256,6 +261,7 @@ bool IsGrafoPainted(){
     return painted;
 }
 
+//Usa o algoritmo Guloso baseado na ordem de maior saturação
 bool Dsatur()
 {
     int saturation = 9;
@@ -295,6 +301,7 @@ bool Dsatur()
     }
 }
 
+//Repete o algortimo de Dsatur com randomização diferente a cada tentativa na soluçaõ de conflito
 void repeatDsatur(){
     bool success = false;
     int count = 0;
@@ -308,7 +315,7 @@ void repeatDsatur(){
         count++;
     }
     if(count >= 50){
-        std::cout << "Matriz não é Resolvivel" << std::endl;
+        std::cout << "Matriz não é Resolvivel com 50 tentativas" << std::endl;
     }
 }
 
@@ -320,6 +327,7 @@ void getRandomSudoku(){
 std::vector<int> vx;
 std::vector<int> vy;
 
+
 bool Checkv(int x,int y, std::vector<int> v, std::vector<int> v1){
     for (int i = 0; i < v.size(); i++) {
         if (x == v[i] && y == v1[i]) {
@@ -329,7 +337,7 @@ bool Checkv(int x,int y, std::vector<int> v, std::vector<int> v1){
     return false;
 }
 
-
+//Enche uma matriz cheia de numeros com zeros aleatoriamente
 void Fillwithzeros(){
     int x;
     int y;
